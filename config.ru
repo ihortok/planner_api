@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
-require 'rack/unreloader'
-require 'sinatra'
+require './config/environment'
+
+if ActiveRecord::Base.connection.migration_context.needs_migration?
+  raise 'Migrations are pending. Run `rake db:migrate` to resolve the issue.'
+end
 
 Unreloader = Rack::Unreloader.new { App }
 Unreloader.require './app.rb'
